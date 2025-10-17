@@ -1,11 +1,14 @@
 ---
-title: Example Guide
-description: A guide in my new Starlight docs site.
+title: 예제 가이드
+description: Starlight로 만든 예제 가이드 페이지입니다.
 ---
 
-Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
-Writing a good guide requires thinking about what your users are trying to do.
+이것은 한국어 예제 가이드 페이지입니다.
 
-## Further reading
+## 섹션 제목
 
-- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+여기에 콘텐츠를 작성하세요.
+
+### 하위 섹션
+
+더 많은 내용을 추가할 수 있습니다.

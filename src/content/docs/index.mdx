@@ -1,16 +1,16 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: 코알라코딩에 오신 것을 환영합니다
+description: 코알라코딩 문서 사이트를 시작하세요.
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: 새로운 코알라코딩 프로젝트 설정을 축하합니다!
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Example Guide
+    - text: 예제 가이드
       link: /guides/example/
       icon: right-arrow
-    - text: Read the Starlight docs
+    - text: 코알라코딩 문서 읽기
       link: https://starlight.astro.build
       icon: external
       variant: minimal
@@ -18,23 +18,22 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## 다음 단계
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="콘텐츠 업데이트" icon="pencil">
+		`src/content/docs/index.mdx`를 편집하여 이 페이지의 변경 사항을 확인하세요.
 	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
+	<Card title="페이지 레이아웃 변경" icon="document">
+		`src/content/docs/index.mdx`에서 `template: splash`를 삭제하면 이 페이지에 사이드바가 표시됩니다.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="새 콘텐츠 추가" icon="add-document">
+		`src/content/docs`에 Markdown 또는 MDX 파일을 추가하여 새 페이지를 만드세요.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="사이트 구성" icon="setting">
+		`astro.config.mjs`에서 `sidebar` 및 기타 설정을 편집하세요.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="문서 읽기" icon="open-book">
+		[코알라코딩 문서](https://starlight.astro.build/)에서 자세히 알아보세요.
 	</Card>
 </CardGrid>

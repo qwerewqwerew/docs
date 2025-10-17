@@ -1,11 +1,10 @@
 ---
-title: Example Reference
-description: A reference page in my new Starlight docs site.
+title: 예제 참조
+description: Starlight로 만든 참조 페이지입니다.
 ---
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+이것은 한국어 참조 페이지입니다.
 
-## Further reading
+## API 참조
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+API 문서를 작성하세요.

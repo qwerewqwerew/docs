@@ -1,0 +1,25 @@
+{
+  "audioCues.enabled": "off",
+  "audioCues.volume": 0,
+  "audioCues.lineHasBreakpoint": "off",
+  "audioCues.lineHasError": "off",
+  "audioCues.lineHasWarning": "off",
+  "audioCues.lineHasFoldedArea": "off",
+  "audioCues.lineHasInlineSuggestion": "off",
+  "audioCues.terminalBell": "off",
+  "audioCues.notebookCellCompleted": "off",
+  "audioCues.notebookCellFailed": "off",
+  "audioCues.diffLineInserted": "off",
+  "audioCues.diffLineDeleted": "off",
+  "audioCues.diffLineModified": "off",
+  "audioCues.chatRequestSent": "off",
+  "audioCues.chatResponseReceived": "off",
+  "audioCues.clear": "off",
+  "audioCues.save": "off",
+  "audioCues.format": "off",
+  "workbench.reduceMotion": "on",
+  "accessibility.signals.sounds.volume": 0,
+  "accessibility.signals.terminalBell": {
+    "sound": "off"
+  }
+}
