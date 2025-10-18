@@ -1,0 +1,12 @@
+---
+export const prerender = false;
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import PostDetail from '@/components/PostDetail.astro';
+
+const { id } = Astro.params;
+---
+
+<StarlightPage frontmatter={{ title: '게시글 상세', description: '게시글 내용과 댓글을 확인합니다' }}>
+  <PostDetail />
+</StarlightPage>

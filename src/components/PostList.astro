@@ -1,0 +1,473 @@
+---
+import { supabase } from '@/lib/supabase';
+import AuthButton from '@/components/AuthButton.astro';
+
+const { data: posts, error } = await supabase
+  .from('posts')
+  .select('*')
+  .order('created_at', { ascending: false });
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+---
+
+<div class="board">
+  <div class="header">
+    <div class="header-left">
+      <h1>📝 게시판</h1>
+      <button class="btn-add" id="btn-add" style="display: none;">+ 글쓰기</button>
+    </div>
+    <AuthButton />
+  </div>
+
+  <div id="login-required" class="login-required" style="display: none;">
+    <p>로그인이 필요합니다.</p>
+    <p>GitHub 또는 Google 계정으로 로그인해주세요.</p>
+  </div>
+
+  <div id="board-content" style="display: none;">
+    <div class="form-container" id="form-container" style="display: none;">
+      <form id="post-form">
+        <input type="hidden" id="post-id" />
+        <input type="text" id="author" placeholder="작성자" required />
+        <input type="text" id="title" placeholder="제목" required />
+        <textarea id="content" placeholder="내용" rows="5" required></textarea>
+        <div class="form-btns">
+          <button type="submit" class="btn-save">저장</button>
+          <button type="button" class="btn-cancel" id="btn-cancel">취소</button>
+        </div>
+      </form>
+    </div>
+
+    {error && <div class="error">게시글을 불러올 수 없습니다.</div>}
+
+    {posts && posts.length === 0 && (
+      <div class="empty">게시글이 없습니다. 첫 글을 작성해보세요!</div>
+    )}
+
+    {posts && posts.length > 0 && (
+      <table class="list">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="post-list">
+          {posts.map((post, index) => (
+            <tr data-id={post.id} data-user-id={post.user_id}>
+              <td>{posts.length - index}</td>
+              <td class="title">{post.title}</td>
+              <td>{post.author}</td>
+              <td>{formatDate(post.created_at)}</td>
+              <td class="actions">
+                <button class="btn-edit" data-id={post.id} style="display: none;">수정</button>
+                <button class="btn-delete" data-id={post.id} style="display: none;">삭제</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+</div>
+
+
+<style>
+  .board {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .btn-add {
+    padding: 0.6rem 1.2rem;
+    background: var(--sl-color-accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .btn-add:hover {
+    background: var(--sl-color-accent-high);
+  }
+
+  .form-container {
+    background: var(--sl-color-bg-sidebar);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  #post-form input,
+  #post-form textarea {
+    padding: 0.6rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 4px;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+
+  #post-form textarea {
+    resize: vertical;
+  }
+
+  .form-btns {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn-save,
+  .btn-cancel {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .btn-save {
+    background: var(--sl-color-accent);
+    color: white;
+  }
+
+  .btn-cancel {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-text);
+  }
+
+  .login-required {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--sl-color-bg-sidebar);
+    border-radius: 8px;
+    margin-top: 2rem;
+  }
+
+  .login-required p {
+    font-size: 1.1rem;
+    color: var(--sl-color-gray-3);
+    margin: 0.5rem 0;
+  }
+
+  .login-required p:first-child {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--sl-color-text);
+  }
+
+  .error,
+  .empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--sl-color-gray-3);
+    background: var(--sl-color-bg-sidebar);
+    border-radius: 8px;
+  }
+
+  .list {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--sl-color-bg-sidebar);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .list th {
+    background: var(--sl-color-gray-6);
+    padding: 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .list td {
+    padding: 0.8rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+    font-size: 0.9rem;
+  }
+
+  .list tr:hover {
+    background: var(--sl-color-gray-6);
+  }
+
+  .list .title {
+    font-weight: 500;
+  }
+
+  .list th:nth-child(1),
+  .list td:nth-child(1) {
+    width: 60px;
+    text-align: center;
+  }
+
+  .list th:nth-child(3),
+  .list td:nth-child(3) {
+    width: 100px;
+  }
+
+  .list th:nth-child(4),
+  .list td:nth-child(4) {
+    width: 150px;
+  }
+
+  .list th:nth-child(5),
+  .list td:nth-child(5) {
+    width: 130px;
+    text-align: center;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    padding: 0.3rem 0.7rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .btn-edit {
+    background: var(--sl-color-accent);
+    color: white;
+  }
+
+  .btn-delete {
+    background: #dc3545;
+    color: white;
+  }
+
+  .btn-edit:hover {
+    background: var(--sl-color-accent-high);
+  }
+
+  .btn-delete:hover {
+    background: #c82333;
+  }
+</style>
+
+<script>
+  import { supabase } from '@/lib/supabase';
+
+  const btnAdd = document.getElementById('btn-add');
+  const btnCancel = document.getElementById('btn-cancel');
+  const formContainer = document.getElementById('form-container');
+  const postForm = document.getElementById('post-form') as HTMLFormElement;
+  const postId = document.getElementById('post-id') as HTMLInputElement;
+  const author = document.getElementById('author') as HTMLInputElement;
+  const title = document.getElementById('title') as HTMLInputElement;
+  const content = document.getElementById('content') as HTMLTextAreaElement;
+
+  // 현재 사용자 정보 가져오기
+  async function getCurrentUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  }
+
+  // 사용자 역할 확인
+  async function getUserRole() {
+    const user = await getCurrentUser();
+    if (!user) return null;
+
+    const { data } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    return data?.role || 'author';
+  }
+
+  // 버튼 권한 체크 및 표시
+  async function checkButtonPermissions() {
+    const user = await getCurrentUser();
+    if (!user) return;
+
+    const role = await getUserRole();
+
+    document.querySelectorAll('[data-user-id]').forEach(row => {
+      const postUserId = row.getAttribute('data-user-id');
+      const editBtn = row.querySelector('.btn-edit');
+      const deleteBtn = row.querySelector('.btn-delete');
+
+      // Admin은 모든 버튼 표시, Author는 자신의 글만 표시
+      const canManage = role === 'admin' || postUserId === user.id;
+
+      if (editBtn) (editBtn as HTMLElement).style.display = canManage ? 'inline-block' : 'none';
+      if (deleteBtn) (deleteBtn as HTMLElement).style.display = canManage ? 'inline-block' : 'none';
+    });
+  }
+
+  // 글쓰기 버튼
+  btnAdd?.addEventListener('click', async () => {
+    postForm?.reset();
+    if (postId) postId.value = '';
+
+    // 로그인한 사용자 정보로 작성자 자동 입력
+    const user = await getCurrentUser();
+    if (user && author) {
+      author.value = user.email || user.user_metadata.name || '익명';
+      author.readOnly = true;
+    }
+
+    if (formContainer) formContainer.style.display = 'block';
+  });
+
+  // 취소 버튼
+  btnCancel?.addEventListener('click', () => {
+    if (formContainer) formContainer.style.display = 'none';
+    postForm?.reset();
+    if (author) author.readOnly = false;
+  });
+
+  // 저장 (등록/수정)
+  postForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 인증 확인
+    const user = await getCurrentUser();
+    if (!user) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    const id = postId?.value;
+    const data = {
+      author: author.value,
+      title: title.value,
+      content: content.value,
+      user_id: user.id  // 사용자 ID 추가
+    };
+
+    try {
+      if (id) {
+        // 수정
+        const { error } = await supabase
+          .from('posts')
+          .update(data)
+          .eq('id', id);
+
+        if (error) throw error;
+        alert('수정되었습니다.');
+      } else {
+        // 등록
+        const { error } = await supabase
+          .from('posts')
+          .insert(data);
+
+        if (error) throw error;
+        alert('등록되었습니다.');
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert('저장 실패: ' + error.message);
+    }
+  });
+
+  // 수정 버튼
+  document.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const id = (e.target as HTMLElement).dataset.id;
+
+      try {
+        const { data, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+
+        if (postId) postId.value = data.id;
+        if (author) author.value = data.author;
+        if (title) title.value = data.title;
+        if (content) content.value = data.content;
+        if (formContainer) formContainer.style.display = 'block';
+      } catch (error) {
+        console.error(error);
+        alert('불러오기 실패');
+      }
+    });
+  });
+
+  // 삭제 버튼
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      if (!confirm('삭제하시겠습니까?')) return;
+
+      const id = (e.target as HTMLElement).dataset.id;
+
+      try {
+        const { error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        alert('삭제되었습니다.');
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+        alert('삭제 실패');
+      }
+    });
+  });
+
+  // 전역 함수로 노출
+  window.checkButtonPermissions = checkButtonPermissions;
+
+  // 페이지 로드 시 권한 체크
+  checkButtonPermissions();
+</script>
+
+

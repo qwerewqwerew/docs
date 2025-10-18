@@ -1,0 +1,211 @@
+---
+// 로그인/로그아웃 버튼 컴포넌트
+---
+
+<div id="auth-container">
+  <div id="auth-loading">로딩중...</div>
+  <div id="auth-logged-out" style="display: none;">
+    <button id="login-github" class="btn-login">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      GitHub 로그인
+    </button>
+    <button id="login-google" class="btn-login">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
+      </svg>
+      Google 로그인
+    </button>
+  </div>
+  <div id="auth-logged-in" style="display: none;">
+    <span id="user-info"></span>
+    <button id="logout" class="btn-logout">로그아웃</button>
+  </div>
+</div>
+
+<style>
+  #auth-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  #auth-logged-out {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  #auth-logged-in {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  #user-info {
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .btn-login,
+  .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 6px;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-login:hover {
+    background: var(--sl-color-gray-6);
+    border-color: var(--sl-color-gray-4);
+  }
+
+  .btn-logout {
+    background: var(--sl-color-gray-5);
+  }
+
+  .btn-logout:hover {
+    background: var(--sl-color-gray-4);
+  }
+
+  #auth-loading {
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-3);
+  }
+</style>
+
+<script>
+  import { supabase } from '@/lib/supabase';
+
+  console.log('🚀 AuthButton 스크립트 로드됨');
+
+  const authContainer = document.getElementById('auth-container');
+  const authLoading = document.getElementById('auth-loading');
+  const authLoggedOut = document.getElementById('auth-logged-out');
+  const authLoggedIn = document.getElementById('auth-logged-in');
+  const userInfo = document.getElementById('user-info');
+  const loginGithub = document.getElementById('login-github');
+  const loginGoogle = document.getElementById('login-google');
+  const logoutBtn = document.getElementById('logout');
+
+  console.log('🔍 버튼 요소:', { loginGithub, loginGoogle });
+
+  // 현재 사용자 확인
+  async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (authLoading) authLoading.style.display = 'none';
+
+    const loginRequired = document.getElementById('login-required');
+    const boardContent = document.getElementById('board-content');
+    const btnAdd = document.getElementById('btn-add');
+
+    if (user) {
+      // 로그인 상태
+      if (authLoggedIn) authLoggedIn.style.display = 'flex';
+      if (authLoggedOut) authLoggedOut.style.display = 'none';
+      if (userInfo) userInfo.textContent = `👤 ${user.email || user.user_metadata.name}`;
+
+      // 게시판 콘텐츠 표시
+      if (loginRequired) loginRequired.style.display = 'none';
+      if (boardContent) boardContent.style.display = 'block';
+      if (btnAdd) btnAdd.style.display = 'block';
+
+      // 버튼 권한 체크 (PostList의 함수 호출)
+      if (typeof window.checkButtonPermissions === 'function') {
+        window.checkButtonPermissions();
+      }
+    } else {
+      // 로그아웃 상태
+      if (authLoggedIn) authLoggedIn.style.display = 'none';
+      if (authLoggedOut) authLoggedOut.style.display = 'flex';
+
+      // 로그인 요구 메시지 표시
+      if (loginRequired) loginRequired.style.display = 'block';
+      if (boardContent) boardContent.style.display = 'none';
+      if (btnAdd) btnAdd.style.display = 'none';
+    }
+  }
+
+  // GitHub 로그인
+  loginGithub?.addEventListener('click', async () => {
+    console.log('🔑 GitHub 로그인 버튼 클릭됨!');
+    console.log('📍 현재 위치:', window.location.href);
+    console.log('📍 리다이렉트 URL:', window.location.origin + '/board/');
+
+    try {
+      console.log('🔄 signInWithOAuth 호출 중...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: window.location.origin + '/board/'
+        }
+      });
+
+      console.log('📦 응답 데이터:', data);
+      console.log('❗ 응답 에러:', error);
+
+      if (error) {
+        console.error('❌ GitHub 로그인 오류:', error);
+        alert('GitHub 로그인 실패: ' + error.message);
+      } else {
+        console.log('✅ GitHub 로그인 성공');
+      }
+    } catch (err) {
+      console.error('❌ 예외 발생:', err);
+      alert('로그인 중 오류가 발생했습니다.');
+    }
+  });
+
+  // Google 로그인
+  loginGoogle?.addEventListener('click', async () => {
+    console.log('🔑 Google 로그인 버튼 클릭됨!');
+    console.log('📍 현재 위치:', window.location.href);
+
+    try {
+      console.log('🔄 signInWithOAuth 호출 중...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/board/'
+        }
+      });
+
+      console.log('📦 응답 데이터:', data);
+      console.log('❗ 응답 에러:', error);
+
+      if (error) {
+        console.error('❌ Google 로그인 오류:', error);
+        alert('Google 로그인 실패: ' + error.message);
+      } else {
+        console.log('✅ Google 로그인 리다이렉트 중...');
+      }
+    } catch (err) {
+      console.error('❌ 예외 발생:', err);
+      alert('로그인 중 오류가 발생했습니다.');
+    }
+  });
+
+  // 로그아웃
+  logoutBtn?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  });
+
+  // 인증 상태 변경 감지
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') {
+      window.location.reload();
+    }
+  });
+
+  checkUser();
+</script>

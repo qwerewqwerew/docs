@@ -1,25 +1,53 @@
 {
   "audioCues.enabled": "off",
-  "audioCues.volume": 0,
-  "audioCues.lineHasBreakpoint": "off",
-  "audioCues.lineHasError": "off",
-  "audioCues.lineHasWarning": "off",
-  "audioCues.lineHasFoldedArea": "off",
-  "audioCues.lineHasInlineSuggestion": "off",
-  "audioCues.terminalBell": "off",
-  "audioCues.notebookCellCompleted": "off",
-  "audioCues.notebookCellFailed": "off",
-  "audioCues.diffLineInserted": "off",
-  "audioCues.diffLineDeleted": "off",
-  "audioCues.diffLineModified": "off",
-  "audioCues.chatRequestSent": "off",
-  "audioCues.chatResponseReceived": "off",
-  "audioCues.clear": "off",
-  "audioCues.save": "off",
-  "audioCues.format": "off",
   "workbench.reduceMotion": "on",
-  "accessibility.signals.sounds.volume": 0,
   "accessibility.signals.terminalBell": {
+    "sound": "off"
+  },
+  "accessibility.signalOptions.volume": 0,
+  "accessibility.signals.lineHasError": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasWarning": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasFoldedArea": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasBreakpoint": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasInlineSuggestion": {
+    "sound": "off"
+  },
+  "accessibility.signals.notebookCellCompleted": {
+    "sound": "off"
+  },
+  "accessibility.signals.notebookCellFailed": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineInserted": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineDeleted": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineModified": {
+    "sound": "off"
+  },
+  "accessibility.signals.chatRequestSent": {
+    "sound": "off"
+  },
+  "accessibility.signals.chatResponseReceived": {
+    "sound": "off"
+  },
+  "accessibility.signals.clear": {
+    "sound": "off"
+  },
+  "accessibility.signals.save": {
+    "sound": "off"
+  },
+  "accessibility.signals.format": {
     "sound": "off"
   }
 }
