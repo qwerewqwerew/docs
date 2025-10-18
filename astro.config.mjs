@@ -1,15 +1,10 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-
-import vercel from "@astrojs/vercel";
-
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-
   integrations: [
     starlight({
       title: "코알라코딩",
@@ -17,8 +12,6 @@ export default defineConfig({
       social: [{ icon: "github", label: "GitHub", href: "https://coalacoding.com" }],
     }),
   ],
-
-  adapter: vercel(),
 
   vite: {
     plugins: [tailwindcss()],

@@ -1,10 +1,19 @@
 ---
-export const prerender = false;
+export const prerender = true;
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import PostDetail from '@/components/PostDetail.astro';
 
 const { id } = Astro.params;
+
+// 정적 경로 생성
+export async function getStaticPaths() {
+  return [
+    { params: { id: "1" } },
+    { params: { id: "2" } },
+    { params: { id: "3" } },
+  ];
+}
 ---
 
 <StarlightPage frontmatter={{ title: '게시글 상세', description: '게시글 내용과 댓글을 확인합니다' }}>
